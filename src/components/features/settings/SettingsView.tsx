@@ -26,7 +26,7 @@ export function SettingsView() {
     });
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     // Convert string inputs back to numbers before saving to context/localStorage

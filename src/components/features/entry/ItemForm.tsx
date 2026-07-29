@@ -22,7 +22,7 @@ export function ItemForm() {
   // Calculate the margin on the fly using the global target margin setting
   const analysis = analyzeItem(numBuy, numSell, settings.targetMargin);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     // Prevent submission of zero-dollar items
