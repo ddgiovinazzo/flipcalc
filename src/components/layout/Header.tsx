@@ -19,10 +19,6 @@ export function Header() {
           </svg>
           <h1 className="text-xl font-bold tracking-wide">FlipCalc</h1>
         </div>
-        <div className="flex items-center gap-1 text-blue-200 text-xs font-medium bg-blue-700/50 px-2 py-1 rounded-full">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          Offline
-        </div>
       </div>
     </header>
   );
