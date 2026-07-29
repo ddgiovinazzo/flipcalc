@@ -1,71 +1,34 @@
-interface MarginResult {
-  profitAmount: number;
-  marginPercentage: number;
-  isGoodBuy: boolean;
-  message: string;
-  status: 'success' | 'warning' | 'error' | 'info';
-}
+import { useAppState } from '../context/AppStateContext';
 
 export function useMarginMath() {
-  const analyzeItem = (
-    buyPrice: number,
-    sellPrice: number,
-    targetMargin: number
-  ): MarginResult => {
-    // Handle empty or invalid states gracefully
-    if (sellPrice <= 0 || buyPrice < 0) {
-      return {
-        profitAmount: 0,
-        marginPercentage: 0,
-        isGoodBuy: false,
-        message: 'Awaiting valid prices...',
-        status: 'info',
-      };
-    }
+  const { settings } = useAppState();
 
-    const profitAmount = sellPrice - buyPrice;
+  const calculateTargets = (buyPrice: number) => {
+    if (!buyPrice || buyPrice <= 0) return null;
 
-    // Standard Gross Profit Margin formula: (Revenue - Cost of Goods) / Revenue * 100
-    const marginPercentage = (profitAmount / sellPrice) * 100;
+    // 1. Calculate price needed to hit target margin percentage
+    // True Margin Formula: Margin = (Sale - Buy) / Sale
+    // Therefore: Sale = Buy / (1 - Margin)
+    const decimalMargin = settings.targetMargin / 100;
+    const priceForMargin = buyPrice / (1 - decimalMargin);
 
-    const isGoodBuy = marginPercentage >= targetMargin;
+    // 2. Calculate price needed to hit flat dollar threshold
+    const priceForThreshold = buyPrice + settings.minProfitThreshold;
 
-    // Determine UI status and messaging based on the results
-    let message = '';
-    let status: 'success' | 'warning' | 'error' = 'success';
+    // 3. The true minimum sale price is whichever is HIGHER
+    const targetSalePrice = Math.max(priceForMargin, priceForThreshold);
+    const targetProfit = targetSalePrice - buyPrice;
 
-    if (profitAmount < 0) {
-      message = 'Guaranteed Loss. Hard Pass.';
-      status = 'error';
-    } else if (profitAmount === 0) {
-      message = 'Break Even. Pass.';
-      status = 'warning';
-    } else if (isGoodBuy) {
-      message = `Good Buy! Margin is ${marginPercentage.toFixed(1)}%`;
-      status = 'success';
-    } else {
-      message = `Pass. Margin is only ${marginPercentage.toFixed(1)}% (Target: ${targetMargin}%)`;
-      status = 'warning';
-    }
+    // 4. Determine which rule triggered the final price (for UI feedback)
+    const activeRule =
+      targetSalePrice === priceForThreshold ? 'threshold' : 'margin';
 
     return {
-      profitAmount,
-      marginPercentage,
-      isGoodBuy,
-      message,
-      status,
+      targetSalePrice,
+      targetProfit,
+      activeRule,
     };
   };
 
-  // Helper for checking the running cart against the budget
-  const calculateTotalCost = (
-    items: { buyPrice: number }[],
-    taxRate: number
-  ) => {
-    const subtotal = items.reduce((sum, item) => sum + item.buyPrice, 0);
-    const taxAmount = subtotal * (taxRate / 100);
-    return subtotal + taxAmount;
-  };
-
-  return { analyzeItem, calculateTotalCost };
+  return { calculateTargets };
 }

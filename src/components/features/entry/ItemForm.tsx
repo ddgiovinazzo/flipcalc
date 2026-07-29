@@ -2,110 +2,91 @@ import { useState } from 'react';
 import { useAppState } from '../../../context/AppStateContext';
 import { useMarginMath } from '../../../hooks/useMarginMath';
 import { Card } from '../../ui/Card';
-import { Label } from '../../ui/Label';
-import { Input } from '../../ui/Input';
-import { Button } from '../../ui/Button';
-import { RealTimeReport } from './RealTimeReport';
 
 export function ItemForm() {
-  const { settings, addItem } = useAppState();
-  const { analyzeItem } = useMarginMath();
-
-  const [name, setName] = useState('');
+  const [itemName, setItemName] = useState('');
   const [buyPrice, setBuyPrice] = useState('');
-  const [sellPrice, setSellPrice] = useState('');
 
-  // Safely cast string inputs to numbers for the math hook
-  const numBuy = Number(buyPrice) || 0;
-  const numSell = Number(sellPrice) || 0;
+  // 1. Destructure addItem instead of dispatch
+  const { addItem } = useAppState();
+  const { calculateTargets } = useMarginMath();
 
-  // Calculate the margin on the fly using the global target margin setting
-  const analysis = analyzeItem(numBuy, numSell, settings.targetMargin);
+  const targets = calculateTargets(parseFloat(buyPrice));
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!itemName || !buyPrice) return;
 
-    // Prevent submission of zero-dollar items
-    if (numBuy <= 0 || numSell <= 0) return;
-
-    // Send the item to the global Context array
+    // 2. Call addItem directly.
+    // We do not pass an 'id' because your context handles it automatically!
     addItem({
-      name: name.trim() || 'Unnamed Item',
-      buyPrice: numBuy,
-      sellPrice: numSell,
-      calculatedMargin: analysis.marginPercentage,
+      name: itemName,
+      buyPrice: parseFloat(buyPrice),
+      // 3. Pass the calculated targets to satisfy your TypeScript interface
+      sellPrice: targets ? targets.targetSalePrice : 0,
+      calculatedMargin: targets ? targets.targetProfit : 0,
     });
 
-    // Clear the form for the next item
-    setName('');
+    setItemName('');
     setBuyPrice('');
-    setSellPrice('');
   };
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-800">Analyze Item</h2>
-
-      <Card>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="itemName">Item Name (Optional)</Label>
-            <Input
-              id="itemName"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g., Vintage Levi's 501"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="buyPrice">Buy Cost ($)</Label>
-              <Input
-                id="buyPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                required
-                value={buyPrice}
-                onChange={(e) => setBuyPrice(e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-            <div>
-              <Label htmlFor="sellPrice">Expected Sale ($)</Label>
-              <Input
-                id="sellPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                required
-                value={sellPrice}
-                onChange={(e) => setSellPrice(e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-          </div>
-
-          {/* Pass the dynamic calculation to the report UI */}
-          <RealTimeReport
-            profitAmount={analysis.profitAmount}
-            marginPercentage={analysis.marginPercentage}
-            message={analysis.message}
-            status={analysis.status}
+    <Card className="bg-white p-6 shadow-sm border border-gray-200">
+      <h2 className="text-xl font-bold text-gray-800 mb-4">Analyze Item</h2>
+      <form onSubmit={handleAdd} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Item Name
+          </label>
+          <input
+            type="text"
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="e.g., Vintage Sony Walkman"
           />
+        </div>
 
-          <div className="pt-2">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={numBuy <= 0 || numSell <= 0}
-            >
-              Add to Cart
-            </Button>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Buy Cost ($)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={buyPrice}
+            onChange={(e) => setBuyPrice(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            placeholder="0.00"
+          />
+        </div>
+
+        {targets && (
+          <div className="p-4 bg-blue-50 rounded-lg border border-blue-100 mt-4">
+            <p className="text-sm text-blue-800 font-medium mb-1">
+              To hit your goals, you must sell this for at least:
+            </p>
+            <p className="text-3xl font-bold text-blue-900">
+              ${targets.targetSalePrice.toFixed(2)}
+            </p>
+
+            <p className="text-xs text-blue-600 mt-2">
+              {targets.activeRule === 'threshold'
+                ? `Driven by your $${targets.targetProfit.toFixed(2)} minimum profit threshold.`
+                : `Driven by your target profit margin.`}
+            </p>
           </div>
-        </form>
-      </Card>
-    </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={!itemName || !buyPrice}
+          className="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          Add to Cart
+        </button>
+      </form>
+    </Card>
   );
 }

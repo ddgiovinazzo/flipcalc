@@ -6,14 +6,16 @@
 
 Recognizing that many large thrift stores and retail warehouses have notoriously poor cellular reception, FlipCalc abandons traditional API dependencies in favor of a 100% local architecture. It utilizes React and robust `localStorage` management to provide instantaneous gross profit calculations, manual tax entry, and real-time budget tracking without ever dropping a connection. 
 
-This project was built to demonstrate modern front-end engineering principles, focusing on complex state management, atomic component design, utility-first styling, and automated CI/CD deployment.
+This project was built to demonstrate modern front-end engineering principles, focusing on complex state management, atomic component design, utility-first styling, responsive layouts, and automated CI/CD deployment.
 
 ## ✨ Key Features
 
-* **Zero-Latency Margin Math:** Users input a buy cost and expected sale price to receive an instant, color-coded gross profit margin analysis (Good Buy vs. Pass).
-* **Running Inventory Roster:** Items can be named and added to a persistent list, keeping a running tally of the cart's total cost before hitting the register.
-* **Dynamic Budget Alerts:** The UI provides real-time visual alerts (Green/Yellow/Red) as the user approaches or exceeds their custom budget limit.
-* **Persistent Local Settings:** Users can save default configurations directly to the browser, such as their target profit margin, default shopping budget, and local sales tax rate (e.g., setting a baseline of 8.375% for local sourcing trips).
+* **Target-Based Margin Math:** Instead of guessing sale prices, users input a buy cost and the app instantly calculates the minimum required sale price to hit their custom profit goals.
+* **Profit Protection:** Incorporates a flat-dollar minimum profit threshold to ensure low-cost items are actually worth the user's time and effort.
+* **Responsive Workspace:** Features a tabbed, mobile-first UI for active sourcing, which seamlessly expands into a side-by-side desktop dashboard for pre-trip research.
+* **Running Inventory Roster:** Items can be named and added to a persistent list, keeping a running tally of the cart's subtotal, tax, and total out-the-door cost.
+* **Dynamic Budget Alerts:** The UI provides real-time visual alerts and exact remaining dollar amounts as the user approaches or exceeds their custom budget limit.
+* **Persistent Local Settings:** Users can save default configurations directly to the browser, such as their target profit margin, default shopping budget, flat-dollar threshold, and local sales tax rate.
 * **Fully Offline Capable:** Driven entirely by client-side state, native browser cryptography (`crypto.randomUUID`), and `localStorage`, ensuring the app never fails in dead zones.
 
 ## 🏆 Performance & Accessibility
@@ -30,7 +32,7 @@ FlipCalc is engineered to meet strict modern web standards, achieving a **perfec
 * **Styling:** Tailwind CSS v4 (Integrated via Vite Plugin for a zero-config, lightning-fast compiler)
 * **State Management:** React Context API & Custom Hooks
 * **Storage & Security:** Browser `localStorage` & native Web Crypto API
-* **CI/CD:** GitHub Actions automated deployment to GitHub Pages
+* **CI/CD:** GitHub Actions automated deployment to GitHub Pages, Dependabot for security vulnerability scanning
 
 ### Architecture Philosophy (Atomic Design)
 The codebase strictly adheres to an atomic component structure to maximize maintainability and scalability. 

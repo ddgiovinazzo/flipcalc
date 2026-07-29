@@ -11,10 +11,12 @@ export function SettingsView() {
   const { settings, setSettings } = useAppState();
 
   // Use local state for the form inputs so we only update the global state when the user hits "Save"
+  // We use ?? fallbacks to prevent crashes if the user's localStorage has an outdated schema
   const [formData, setFormData] = useState({
-    targetMargin: settings.targetMargin.toString(),
-    defaultBudget: settings.defaultBudget.toString(),
-    taxRate: settings.taxRate.toString(),
+    targetMargin: (settings.targetMargin ?? 40).toString(),
+    defaultBudget: (settings.defaultBudget ?? 100).toString(),
+    taxRate: (settings.taxRate ?? 8.375).toString(),
+    minProfitThreshold: (settings.minProfitThreshold ?? 10).toString(),
   });
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -34,6 +36,7 @@ export function SettingsView() {
       targetMargin: Number(formData.targetMargin) || 0,
       defaultBudget: Number(formData.defaultBudget) || 0,
       taxRate: Number(formData.taxRate) || 0,
+      minProfitThreshold: Number(formData.minProfitThreshold) || 0,
     });
 
     // Flash a quick success message
@@ -92,6 +95,24 @@ export function SettingsView() {
             />
             <p className="text-xs text-gray-500 mt-1">
               Used to calculate the true final cost of your running inventory.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="minProfitThreshold">
+              Minimum Profit Threshold ($)
+            </Label>
+            <Input
+              id="minProfitThreshold"
+              name="minProfitThreshold"
+              type="number"
+              step="1"
+              value={formData.minProfitThreshold}
+              onChange={handleChange}
+              placeholder="e.g., 10"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              The absolute minimum flat-dollar profit required per item.
             </p>
           </div>
 

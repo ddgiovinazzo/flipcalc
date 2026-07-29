@@ -13,8 +13,9 @@ export interface InventoryItem {
 
 export interface Settings {
   targetMargin: number;
-  defaultBudget: number;
   taxRate: number;
+  defaultBudget: number;
+  minProfitThreshold: number;
 }
 
 // 2. Define what the Context will expose to the rest of the app
@@ -41,6 +42,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
       targetMargin: 40,
       defaultBudget: 100,
       taxRate: 8.375,
+      minProfitThreshold: 10,
     }
   );
 
