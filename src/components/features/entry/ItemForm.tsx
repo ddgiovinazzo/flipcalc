@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { useAppState } from '../../../context/AppStateContext';
 import { useMarginMath } from '../../../hooks/useMarginMath';
 import { Card } from '../../ui/Card';
@@ -7,9 +7,12 @@ export function ItemForm() {
   const [itemName, setItemName] = useState('');
   const [buyPrice, setBuyPrice] = useState('');
 
-  // 1. Destructure addItem instead of dispatch
   const { addItem } = useAppState();
   const { calculateTargets } = useMarginMath();
+
+  // Generate unique IDs so the mobile and desktop DOM nodes don't conflict
+  const nameInputId = useId();
+  const priceInputId = useId();
 
   const targets = calculateTargets(parseFloat(buyPrice));
 
@@ -17,12 +20,9 @@ export function ItemForm() {
     e.preventDefault();
     if (!itemName || !buyPrice) return;
 
-    // 2. Call addItem directly.
-    // We do not pass an 'id' because your context handles it automatically!
     addItem({
       name: itemName,
       buyPrice: parseFloat(buyPrice),
-      // 3. Pass the calculated targets to satisfy your TypeScript interface
       sellPrice: targets ? targets.targetSalePrice : 0,
       calculatedMargin: targets ? targets.targetProfit : 0,
     });
@@ -36,10 +36,15 @@ export function ItemForm() {
       <h2 className="text-xl font-bold text-gray-800 mb-4">Analyze Item</h2>
       <form onSubmit={handleAdd} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor={nameInputId}
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Item Name
           </label>
           <input
+            id={nameInputId}
+            name="itemName"
             type="text"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
@@ -49,10 +54,15 @@ export function ItemForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor={priceInputId}
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Buy Cost ($)
           </label>
           <input
+            id={priceInputId}
+            name="buyPrice"
             type="number"
             step="0.01"
             value={buyPrice}

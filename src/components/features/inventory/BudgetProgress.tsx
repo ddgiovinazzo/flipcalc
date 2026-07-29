@@ -18,9 +18,9 @@ export function BudgetProgress() {
   const remainingBudget = budget - totalCost;
 
   // Determine progress bar color based on threshold
-  let progressColor = 'bg-green-500';
+  let progressColor = 'bg-green-600';
   if (percentage >= 100) {
-    progressColor = 'bg-red-500';
+    progressColor = 'bg-red-600';
   } else if (percentage >= 80) {
     progressColor = 'bg-yellow-500';
   }
@@ -29,7 +29,7 @@ export function BudgetProgress() {
     <Card className="bg-white shadow-sm border border-gray-200">
       <div className="flex justify-between items-end mb-2">
         <div>
-          <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider">
+          <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
             Total Est. Cost
           </p>
           <h3 className="text-2xl font-bold text-gray-900">
@@ -37,7 +37,7 @@ export function BudgetProgress() {
           </h3>
         </div>
         <div className="text-right">
-          <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider">
+          <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
             Budget
           </p>
           <p className="font-medium text-gray-900">${budget.toFixed(2)}</p>
@@ -53,13 +53,13 @@ export function BudgetProgress() {
       </div>
 
       {/* Dynamic Budget Status Text */}
-      <div className="mt-2 text-center text-xs font-medium">
+      <div className="mt-2 text-center text-xs font-bold">
         {remainingBudget < 0 ? (
-          <span className="text-red-500">
+          <span className="text-red-700">
             Over Budget by ${Math.abs(remainingBudget).toFixed(2)}
           </span>
         ) : (
-          <span className="text-green-600">
+          <span className="text-green-700">
             ${remainingBudget.toFixed(2)} left in budget
           </span>
         )}
@@ -67,11 +67,11 @@ export function BudgetProgress() {
 
       {/* New Cart Breakdown Section */}
       <div className="mt-4 pt-3 border-t border-gray-100 text-sm space-y-1">
-        <div className="flex justify-between text-gray-500">
+        <div className="flex justify-between text-gray-700">
           <span>Subtotal</span>
           <span>${subtotal.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between text-gray-500">
+        <div className="flex justify-between text-gray-700">
           <span>Tax ({taxRate}%)</span>
           <span>${taxAmount.toFixed(2)}</span>
         </div>
