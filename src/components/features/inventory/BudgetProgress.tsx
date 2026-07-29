@@ -1,15 +1,16 @@
 import { useAppState } from '../../../context/AppStateContext';
-import { useMarginMath } from '../../../hooks/useMarginMath';
 import { Card } from '../../ui/Card';
 
 export function BudgetProgress() {
   const { inventory, settings } = useAppState();
-  const { calculateTotalCost } = useMarginMath();
 
-  const totalCost = calculateTotalCost(inventory, settings.taxRate);
-  const budget = settings.defaultBudget;
+  // Calculate the breakdown
+  const subtotal = inventory.reduce((sum, item) => sum + item.buyPrice, 0);
+  const taxRate = settings.taxRate || 0;
+  const taxAmount = subtotal * (taxRate / 100);
+  const totalCost = subtotal + taxAmount;
 
-  // Calculate percentage, preventing division by zero
+  const budget = settings.defaultBudget || 0;
   const percentage = budget > 0 ? (totalCost / budget) * 100 : 0;
   const clampedPercentage = Math.min(percentage, 100);
 
@@ -51,6 +52,22 @@ export function BudgetProgress() {
           Warning: Budget Exceeded
         </p>
       )}
+
+      {/* New Cart Breakdown Section */}
+      <div className="mt-4 pt-3 border-t border-gray-700 text-sm space-y-1">
+        <div className="flex justify-between text-gray-400">
+          <span>Subtotal</span>
+          <span>${subtotal.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between text-gray-400">
+          <span>Tax ({taxRate}%)</span>
+          <span>${taxAmount.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between text-gray-800 font-medium pt-1">
+          <span>Total at Register</span>
+          <span>${totalCost.toFixed(2)}</span>
+        </div>
+      </div>
     </Card>
   );
 }
