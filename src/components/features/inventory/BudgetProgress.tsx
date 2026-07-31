@@ -26,60 +26,63 @@ export function BudgetProgress() {
   }
 
   return (
-    <Card className="bg-white shadow-sm border border-gray-200">
-      <div className="flex justify-between items-end mb-2">
-        <div>
-          <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
-            Total Est. Cost
-          </p>
-          <h3 className="text-2xl font-bold text-gray-900">
-            ${totalCost.toFixed(2)}
-          </h3>
+    <div className="space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">Budget</h2>
+      <Card className="bg-white shadow-sm border border-gray-200">
+        <div className="flex justify-between items-end mb-2">
+          <div>
+            <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
+              Total Est. Cost
+            </p>
+            <h3 className="text-2xl font-bold text-gray-900">
+              ${totalCost.toFixed(2)}
+            </h3>
+          </div>
+          <div className="text-right">
+            <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
+              Budget
+            </p>
+            <p className="font-medium text-gray-900">${budget.toFixed(2)}</p>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-gray-700 text-xs font-semibold uppercase tracking-wider">
-            Budget
-          </p>
-          <p className="font-medium text-gray-900">${budget.toFixed(2)}</p>
-        </div>
-      </div>
 
-      {/* Progress Bar Track */}
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3 overflow-hidden">
-        <div
-          className={`h-2.5 rounded-full transition-all duration-300 ${progressColor}`}
-          style={{ width: `${clampedPercentage}%` }}
-        ></div>
-      </div>
+        {/* Progress Bar Track */}
+        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-3 overflow-hidden">
+          <div
+            className={`h-2.5 rounded-full transition-all duration-300 ${progressColor}`}
+            style={{ width: `${clampedPercentage}%` }}
+          ></div>
+        </div>
 
-      {/* Dynamic Budget Status Text */}
-      <div className="mt-2 text-center text-xs font-bold">
-        {remainingBudget < 0 ? (
-          <span className="text-red-700">
-            Over Budget by ${Math.abs(remainingBudget).toFixed(2)}
-          </span>
-        ) : (
-          <span className="text-green-700">
-            ${remainingBudget.toFixed(2)} left in budget
-          </span>
-        )}
-      </div>
+        {/* Dynamic Budget Status Text */}
+        <div className="mt-2 text-center text-xs font-bold">
+          {remainingBudget < 0 ? (
+            <span className="text-red-700">
+              Over Budget by ${Math.abs(remainingBudget).toFixed(2)}
+            </span>
+          ) : (
+            <span className="text-green-700">
+              ${remainingBudget.toFixed(2)} left in budget
+            </span>
+          )}
+        </div>
 
-      {/* New Cart Breakdown Section */}
-      <div className="mt-4 pt-3 border-t border-gray-100 text-sm space-y-1">
-        <div className="flex justify-between text-gray-700">
-          <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+        {/* New Cart Breakdown Section */}
+        <div className="mt-4 pt-3 border-t border-gray-100 text-sm space-y-1">
+          <div className="flex justify-between text-gray-700">
+            <span>Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-gray-700">
+            <span>Tax ({taxRate}%)</span>
+            <span>${taxAmount.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between text-gray-900 font-bold pt-1">
+            <span>Total at Register</span>
+            <span>${totalCost.toFixed(2)}</span>
+          </div>
         </div>
-        <div className="flex justify-between text-gray-700">
-          <span>Tax ({taxRate}%)</span>
-          <span>${taxAmount.toFixed(2)}</span>
-        </div>
-        <div className="flex justify-between text-gray-900 font-bold pt-1">
-          <span>Total at Register</span>
-          <span>${totalCost.toFixed(2)}</span>
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

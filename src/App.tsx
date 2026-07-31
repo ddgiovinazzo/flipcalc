@@ -3,9 +3,12 @@ import { Header } from './components/layout/Header';
 import { ItemForm } from './components/features/entry/ItemForm';
 import { InventoryList } from './components/features/inventory/InventoryList';
 import { SettingsView } from './components/features/settings/SettingsView';
+import { BudgetProgress } from './components/features/inventory/BudgetProgress';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'analyze' | 'settings'>('analyze');
+  const [activeTab, setActiveTab] = useState<'analyze' | 'cart' | 'settings'>(
+    'analyze'
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24 md:pb-0">
@@ -33,7 +36,10 @@ export default function App() {
         </div>
 
         <div className="w-2/3">
-          <InventoryList />
+          <BudgetProgress />
+          <div className="mt-8">
+            <InventoryList />
+          </div>
         </div>
       </main>
 
@@ -46,10 +52,12 @@ export default function App() {
           <>
             <ItemForm />
             <div className="mt-8">
-              <InventoryList />
+              <BudgetProgress />
             </div>
           </>
         )}
+
+        {activeTab === 'cart' && <InventoryList />}
         {activeTab === 'settings' && <SettingsView />}
       </main>
 
@@ -60,7 +68,14 @@ export default function App() {
             onClick={() => setActiveTab('analyze')}
             className={`flex flex-col items-center p-2 w-full transition-colors ${activeTab === 'analyze' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
           >
-            <span className="text-sm font-semibold">Calculator & Cart</span>
+            <span className="text-sm font-semibold">Calculator</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('cart')}
+            className={`flex flex-col items-center p-2 w-full transition-colors ${activeTab === 'cart' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            <span className="text-sm font-semibold">Cart</span>
           </button>
 
           <button

@@ -1,6 +1,5 @@
 import { useAppState } from '../../../context/AppStateContext';
 import { Card } from '../../ui/Card';
-import { BudgetProgress } from './BudgetProgress';
 import { InventoryItem } from './InventoryItem';
 
 export function InventoryList() {
@@ -18,7 +17,7 @@ export function InventoryList() {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-end mb-2">
+      <div className="flex justify-between items-end mb-4">
         <h2 className="text-2xl font-bold text-gray-800">Cart</h2>
 
         {inventory.length > 0 && (
@@ -30,8 +29,6 @@ export function InventoryList() {
           </button>
         )}
       </div>
-
-      <BudgetProgress />
 
       <Card className="p-0 overflow-hidden">
         {inventory.length === 0 ? (
