@@ -10,9 +10,9 @@ export function InventoryItem({ item, onRemove }: InventoryItemProps) {
   return (
     <div className="flex justify-between items-center p-3 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors">
       <div className="flex-1">
-        <h4 className="font-semibold text-gray-800">
+        <p className="font-semibold text-gray-800">
           {item.name || 'Unnamed Item'}
-        </h4>
+        </p>
         <div className="flex gap-3 text-sm mt-1">
           <span className="text-gray-600">
             Buy:{' '}
