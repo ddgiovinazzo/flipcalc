@@ -26,6 +26,7 @@ interface AppStateContextType {
   setInventory: (items: InventoryItem[]) => void;
   addItem: (item: Omit<InventoryItem, 'id'>) => void;
   removeItem: (id: string) => void;
+  clearCart: () => void;
 }
 
 // 3. Create the Context
@@ -66,6 +67,10 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
     setInventory(inventory.filter((item) => item.id !== id));
   };
 
+  const clearCart = () => {
+    setInventory([]);
+  };
+
   return (
     <AppStateContext.Provider
       value={{
@@ -75,6 +80,7 @@ export function AppStateProvider({ children }: { children: ReactNode }) {
         setInventory,
         addItem,
         removeItem,
+        clearCart,
       }}
     >
       {children}

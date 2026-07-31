@@ -4,11 +4,32 @@ import { BudgetProgress } from './BudgetProgress';
 import { InventoryItem } from './InventoryItem';
 
 export function InventoryList() {
-  const { inventory, removeItem } = useAppState();
+  const { inventory, removeItem, clearCart } = useAppState();
+
+  const handleClearCart = () => {
+    if (
+      window.confirm(
+        'Are you sure you want to remove all items from your cart?'
+      )
+    ) {
+      clearCart();
+    }
+  };
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold text-gray-800">Cart</h2>
+      <div className="flex justify-between items-end mb-2">
+        <h2 className="text-2xl font-bold text-gray-800">Cart</h2>
+
+        {inventory.length > 0 && (
+          <button
+            onClick={handleClearCart}
+            className="text-sm font-semibold text-red-600 hover:text-red-800 transition-colors pb-1"
+          >
+            Clear All
+          </button>
+        )}
+      </div>
 
       <BudgetProgress />
 
