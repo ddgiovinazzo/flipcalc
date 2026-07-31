@@ -19,7 +19,7 @@ export function Alert({
 
   return (
     <div
-      className={`px-4 py-3 rounded-lg border ${variants[status]} ${className}`}
+      className={`px-4 py-2 rounded-lg font-semibold text-center outline-1 outline-solid ${variants[status]} ${className}`}
       {...props}
     >
       {children}

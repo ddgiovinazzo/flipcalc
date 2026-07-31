@@ -116,17 +116,17 @@ export function SettingsView() {
             </p>
           </div>
 
-          <div className="pt-2">
-            <Button type="submit" className="w-full">
-              Save Settings
-            </Button>
+          <div className="pt-2" aria-live="polite">
+            {showSuccess ? (
+              <Alert status="success">Settings saved successfully!</Alert>
+            ) : (
+              <Button type="submit" className="w-full">
+                Save Settings
+              </Button>
+            )}
           </div>
         </form>
       </Card>
-
-      {showSuccess && (
-        <Alert status="success">Settings saved successfully!</Alert>
-      )}
     </div>
   );
 }
